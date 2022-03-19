@@ -1,0 +1,63 @@
+PRÓXIMAS ETAPAS ATÉ DOMINGO
+	1. Inserir arquetetura hexagonal
+	2. Criar go routines para processar.
+		2.1 Criar flag para mostrar ou não mostrar o log
+	3. Criar server http
+	4. Adicionar quantidade de registro para escrita no arquivo default 1000
+	5. Adicionar command limpar arquivos
+	6. Salvar dados originais invalidos
+	7. Adcionar coluna do erro nos arquivos invalidos
+	8. Adicionar suporte a outros tipos de arquivos
+	9. Separar projeto para criar arquivos com hash e prefixo no nome para unifircar no final
+	10. Adiconar redis para criar cache dos dados salvos
+		10.1 Criar command para limpar cache pront comando
+	11. Criar serviço com mensageria
+		11.1 Receber lista de arquivo para processar na mensagem
+		11.2 Conectar em S3 para ler próximo arquivo para processar
+
+
+
+
+Analisador de CSV Rain
+Nossa empresa precisa analisar arquivos CSV provenientes de diferentes empregadores para criar uma lista de funcionários qualificados para se inscrever no Rain.
+Embora os arquivos precisem ter dados importantes, o Rain não controla a estrutura geral dos arquivos. Por exemplo, os nomes e a ordem das colunas podem ser diferentes de arquivo para arquivo.
+Seu trabalho é criar um analisador escrito em Golang que possa ler esses arquivos e padronizar os dados a serem processados ​​posteriormente. Você pode usar os 4 arquivos de amostra que fornecemos 
+(roster1.csv, roster2.csv, roster3.csv, roster4.csv) como ponto de partida, mas você deve oferecer suporte a estruturas de arquivos adicionais.
+
+Requisitos:
+X	1. Analise os arquivos de entrada um de cada vez e gere dois arquivos como saída, um para dados corretos, um para dados incorretos.
+X		Alterar código para gerar user validos e inválidos
+X		Gerar dois arquivos de saída
+X			um de dados validos
+X			outro de invalidos
+X			salvar dados validos
+X			salvar dados invalidos
+X		Arquivo processado será movido de pasta processed
+X	2. Validações mínimas (você pode criar validações adicionais):
+X		2.1. Dados requeridos:
+X			2.1.1. Nome do empregado
+X			2.1.2. Salário do funcionário
+X			2.1.3. E-mail do funcionário
+X			2.1.4. ID do Empregado
+X		2.2. O e-mail do funcionário deve ser exclusivo
+X		2.3. O ID do funcionário deve ser exclusivo
+X			validar user validos
+X			validar user invalidos
+HOJE
+	3. Emita um resumo das etapas de processamento no console
+X	4. Crie testes de unidade
+		4.1 Processar todos os arquivos
+X	5. O projeto deve ser implementado em Golang 1.16+
+X	6. O projeto deve ter uma estrutura de pastas clara, escalável e simples (não um único script de arquivo)
+DOMINGO
+	7. No arquivo README, você deve cobrir pelo menos:
+		7.1 Como executar o projeto
+		7.2 Explique a arquitetura escolhida. Por que você acha que é um bom ajuste para este problema?
+		7.3 Como você evoluiria seu código enviado
+
+Notas:
+1. IMPORTANTE: Não publique seu projeto em repositórios online públicos
+2. Você pode entrar em contato conosco em caso de dúvidas
+3. Links úteis:
+- https://golang.org/doc/effective_go.html
+- https://www.quora.com/What-is-the-best-software-development-checklist?share=1

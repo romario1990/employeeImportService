@@ -1,0 +1,11 @@
+{
+  "FullName":   ["name", "fullname"],
+  "FirstName":  ["firstname", "first", "fname", "fname"],
+  "MiddleName": ["middlename", "middle"],
+  "LastName":   ["lastname", "last", "lname"],
+  "Email":      ["email", "mail", "airmail", "electronicmail", "junkmail", "mail", "postalcard", "postcard"],
+  "Salary":     ["emolument", "hire", "packet", "pay", "payenvelope", "paycheck", "payment", "stipend", "wage", "salary", "rate"],
+  "Identifier": ["id", "key", "identify", "uid", "hash", "hashid", "idhash", "number", "seq", "sequence", "employeenumber", "empid"],
+  "Phone":      ["phone", "call", "dial", "ring", "telephone"],
+  "Mobile":     ["mobile"]
+}
