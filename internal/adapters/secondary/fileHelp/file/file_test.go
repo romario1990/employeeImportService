@@ -1,9 +1,11 @@
-package secondaryMoveFile
+package secondaryFile
 
 import (
 	"io"
 	"os"
+	"reflect"
 	"testing"
+	"uploader/constants"
 )
 
 func setUp() {
@@ -93,6 +95,72 @@ func TestMoveFileProcessedError(t *testing.T) {
 				t.Errorf("TestMoveFileProcessedError() error, error moving processed file = roster1.csv")
 			}
 			tearDown()
+		})
+	}
+}
+
+func TestCreateDefaultFiles(t *testing.T) {
+	defaultPath := "./../../../../../transfer/mock/"
+	type args struct {
+		header      [][]string
+		defaultPath string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			"Test_Creation_Of_Standard_Files_Of_Success_And_Error",
+			args{constants.HEADER, defaultPath},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := CreateDefaultFiles(tt.args.header, tt.args.defaultPath); (err != nil) != tt.wantErr {
+				t.Errorf("CreateDefaultFiles() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if _, err := os.Stat(defaultPath + constants.SUCCESSPATHNAME); err != nil {
+				t.Errorf("CreateDefaultFiles() error, success file not created = %v", constants.SUCCESSNAMEFILE)
+			}
+			if _, err := os.Stat(defaultPath + constants.ERRORPATHNAME); err != nil {
+				t.Errorf("CreateDefaultFiles() error, error file not created = %v", constants.ERRORNAMEFILE)
+			}
+			e := os.Remove(defaultPath + constants.SUCCESSPATHNAME)
+			if e != nil {
+				t.Errorf("CreateDefaultFiles() error, success file not deleted = %v", constants.ERRORNAMEFILE)
+			}
+			e = os.Remove(defaultPath + constants.ERRORPATHNAME)
+			if e != nil {
+				t.Errorf("CreateDefaultFiles() error, error file not deleted = %v", constants.ERRORNAMEFILE)
+			}
+		})
+	}
+}
+
+func TestReadAllNameFilesPath(t *testing.T) {
+	type args struct {
+		pathName string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ReadAllNameFilesPath(tt.args.pathName)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ReadAllNameFilesPath() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ReadAllNameFilesPath() got = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

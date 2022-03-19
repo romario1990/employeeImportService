@@ -4,31 +4,29 @@ import (
 	"fmt"
 	"uploader/config"
 	"uploader/constants"
-	"uploader/entities"
-	secondaryCreateFile "uploader/internal/adapters/secondary/fileHelp/create"
-	secondaryMoveFile "uploader/internal/adapters/secondary/fileHelp/move"
-	secondaryReadFile "uploader/internal/adapters/secondary/fileHelp/read"
+	secondaryFile "uploader/internal/adapters/secondary/fileHelp/file"
 	secondaryReadFileCSV "uploader/internal/adapters/secondary/fileHelp/read/csv"
-	secondaryWriteFile "uploader/internal/adapters/secondary/fileHelp/write"
+	secondaryWriteFile "uploader/internal/adapters/secondary/fileHelp/write/csv"
+	"uploader/pkg/domains/users"
 )
 
 func Exec(filename string, hasH bool) error {
 	fmt.Println("############################ STARTING ############################")
 	fmt.Println("---------------------------- Start of processing information ----------------------------")
-	file, err := secondaryReadFile.Read(filename)
+	file, err := secondaryFile.Read(filename)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	secondaryCreateFile.InitExec(nil)
-	var usersValid, userInvalid []entities.ConfigurationHeaderExport
+	secondaryFile.InitExec(nil)
+	var usersValid, userInvalid []users.ConfigurationHeaderExport
 	confHeader, err := config.LoadConfigHeader()
 	if err != nil {
 		file.Close()
-		secondaryMoveFile.MoveFileProcessedError(filename, "")
+		secondaryFile.MoveFileProcessedError(filename, "")
 		return fmt.Errorf("headerconfiguration.json file not configured")
 	}
-	configHeader := entities.ConfigurationHeader{
+	configHeader := users.ConfigurationHeader{
 		FullName:   confHeader.GetStringSlice(constants.FULLNAME),
 		FirstName:  confHeader.GetStringSlice(constants.FIRSTNAME),
 		MiddleName: confHeader.GetStringSlice(constants.MIDDLENAME),
@@ -44,7 +42,7 @@ func Exec(filename string, hasH bool) error {
 	usersValid, userInvalid, err = secondaryReadFileCSV.ReadFile(file, hasH, configHeader, 9)
 	if err != nil {
 		file.Close()
-		secondaryMoveFile.MoveFileProcessedError(filename, "")
+		secondaryFile.MoveFileProcessedError(filename, "")
 		return err
 	}
 	oldValues, err := secondaryReadFileCSV.GetDataCSV(constants.SUCCESSPATHNAME)
@@ -59,11 +57,11 @@ func Exec(filename string, hasH bool) error {
 	fmt.Println("AQUIIIIIIIII 4 ")
 	if err != nil {
 		file.Close()
-		secondaryMoveFile.MoveFileProcessedError(filename, "")
+		secondaryFile.MoveFileProcessedError(filename, "")
 		return err
 	}
 	file.Close()
-	err = secondaryMoveFile.MoveFileProcessed(filename, "")
+	err = secondaryFile.MoveFileProcessed(filename, "")
 	if err != nil {
 		return err
 	}

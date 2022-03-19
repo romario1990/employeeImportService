@@ -1,11 +1,11 @@
-package secondaryWriteFile
+package csv
 
 import (
 	"encoding/csv"
 	"fmt"
 	"os"
 	"uploader/constants"
-	"uploader/entities"
+	"uploader/pkg/domains/users"
 )
 
 func WriteCSV(file *os.File, values [][]string) {
@@ -16,8 +16,8 @@ func WriteCSV(file *os.File, values [][]string) {
 	w.Flush()
 }
 
-//TODO remover
-func SaveInFile(oldValues [][]string, filename string, users []entities.ConfigurationHeaderExport) error {
+//TODO remover pkg
+func SaveInFile(oldValues [][]string, filename string, users []users.ConfigurationHeaderExport) error {
 	file, err := os.OpenFile(filename, os.O_RDWR, 0644)
 	if err != nil {
 		return fmt.Errorf("error trying to edit file")
@@ -36,7 +36,8 @@ func SaveInFile(oldValues [][]string, filename string, users []entities.Configur
 	return nil
 }
 
-func SaveUsers(oldValues [][]string, validUsers []entities.ConfigurationHeaderExport, path string, userValid bool) (err error) {
+//TODO remover pkg
+func SaveUsers(oldValues [][]string, validUsers []users.ConfigurationHeaderExport, path string, userValid bool) (err error) {
 	if path == "" && userValid {
 		path = "./" + constants.SUCCESSPATHNAME
 	} else if path == "" && !userValid {

@@ -2,15 +2,15 @@ package secondaryUserValidator
 
 import (
 	"testing"
-	"uploader/entities"
+	"uploader/pkg/domains/users"
 )
 
 func TestValidateFieldsAlreadyRegistered(t *testing.T) {
-	userWithAlreadyRegisteredEmail := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "1"}
-	userWithAlreadyRegisteredIdentifier := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "2"}
+	userWithAlreadyRegisteredEmail := users.ConfigurationHeaderExport{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "1"}
+	userWithAlreadyRegisteredIdentifier := users.ConfigurationHeaderExport{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "2"}
 	values := []string{"doe@test.com", "2"}
 	type args struct {
-		newUser entities.ConfigurationHeaderExport
+		newUser users.ConfigurationHeaderExport
 		user    []string
 	}
 	tests := []struct {
@@ -39,22 +39,23 @@ func TestValidateFieldsAlreadyRegistered(t *testing.T) {
 }
 
 func TestCheckUserValid(t *testing.T) {
-	user := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "1"}
-	users := []entities.ConfigurationHeaderExport{
+	user := users.ConfigurationHeaderExport{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "1"}
+	userEmailInvalid := users.ConfigurationHeaderExport{Name: "John Doe", Email: "doetest.com", Salary: "$10.00", Identifier: "1"}
+	userIdentifierInvalid := users.ConfigurationHeaderExport{Name: "John Doe", Email: "doet@est.com", Salary: "$10.00", Identifier: "2"}
+	userWithoutEmail := users.ConfigurationHeaderExport{Name: "John Doe", Email: "", Salary: "$10.00", Identifier: "1"}
+	userWithoutIdentifier := users.ConfigurationHeaderExport{Name: "John Doe", Email: "doetest.com", Salary: "$10.00", Identifier: ""}
+	type args struct {
+		user      users.ConfigurationHeaderExport
+		users     []users.ConfigurationHeaderExport
+		oldValues [][]string
+	}
+	users := []users.ConfigurationHeaderExport{
 		{Name: "Mary Jane", Email: "Mary@tes.com", Salary: "$15", Identifier: "2"},
 		{Name: "Max Topperson", Email: "mary@tes.com", Salary: "$11", Identifier: "3"},
 		{Name: "Alfred Donald", Email: "", Salary: "$11.5", Identifier: "3"},
 		{Name: "Jane Doe", Email: "jane_doe@test.com", Salary: "$8.45", Identifier: "5"},
 	}
-	userEmailInvalid := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "doetest.com", Salary: "$10.00", Identifier: "1"}
-	userIdentifierInvalid := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "doet@est.com", Salary: "$10.00", Identifier: "2"}
-	userWithoutEmail := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "", Salary: "$10.00", Identifier: "1"}
-	userWithoutIdentifier := entities.ConfigurationHeaderExport{Name: "John Doe", Email: "doetest.com", Salary: "$10.00", Identifier: ""}
-	type args struct {
-		user      entities.ConfigurationHeaderExport
-		users     []entities.ConfigurationHeaderExport
-		oldValues [][]string
-	}
+
 	tests := []struct {
 		name    string
 		args    args

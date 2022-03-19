@@ -4,7 +4,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
-	"uploader/entities"
+	"uploader/pkg/domains/users"
 )
 
 func TestReadFile(t *testing.T) {
@@ -12,7 +12,7 @@ func TestReadFile(t *testing.T) {
 	filenameNonExistent := "../../../../../../transfer/mock/transfer/pending/non_existent_file.csv"
 	testCaseWithHeader, _ := os.Open(filenameWithHeader)
 	testCaseNonExistent, _ := os.Open(filenameNonExistent)
-	configHeader := entities.ConfigurationHeader{
+	configHeader := users.ConfigurationHeader{
 		FullName:   []string{"name", "fullname", "full_name"},
 		FirstName:  []string{"firstname", "first", "fname"},
 		MiddleName: []string{"middlename", "middle"},
@@ -26,25 +26,25 @@ func TestReadFile(t *testing.T) {
 	type args struct {
 		f                *os.File
 		hasHeader        bool
-		configHeader     entities.ConfigurationHeader
+		configHeader     users.ConfigurationHeader
 		sizeStructHeader int
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    []entities.ConfigurationHeaderExport
-		want1   []entities.ConfigurationHeaderExport
+		want    []users.ConfigurationHeaderExport
+		want1   []users.ConfigurationHeaderExport
 		wantErr bool
 	}{
 		{
 			"Read csv File With Header Test Case",
 			args{testCaseWithHeader, true, configHeader, 9},
-			[]entities.ConfigurationHeaderExport{
+			[]users.ConfigurationHeaderExport{
 				{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "1"},
 				{Name: "Mary Jane", Email: "mary@tes.com", Salary: "$15", Identifier: "2"},
 				{Name: "Max Topperson", Email: "max@test.com", Salary: "$11", Identifier: "3"},
 			},
-			[]entities.ConfigurationHeaderExport{
+			[]users.ConfigurationHeaderExport{
 				{Name: "Alfred Donald", Email: "", Salary: "$11.5", Identifier: "4"},
 				{Name: "Jane Doe", Email: "doe@test.com", Salary: "$8.45", Identifier: "5"},
 			},
@@ -53,15 +53,15 @@ func TestReadFile(t *testing.T) {
 		{
 			"Non Existent csv File With Header Test Case",
 			args{testCaseNonExistent, true, configHeader, 9},
-			[]entities.ConfigurationHeaderExport{},
-			[]entities.ConfigurationHeaderExport{},
+			[]users.ConfigurationHeaderExport{},
+			[]users.ConfigurationHeaderExport{},
 			true,
 		},
 		{
 			"Non Existent csv File Without Header Test Case",
 			args{testCaseNonExistent, false, configHeader, 9},
-			[]entities.ConfigurationHeaderExport{},
-			[]entities.ConfigurationHeaderExport{},
+			[]users.ConfigurationHeaderExport{},
+			[]users.ConfigurationHeaderExport{},
 			true,
 		},
 	}

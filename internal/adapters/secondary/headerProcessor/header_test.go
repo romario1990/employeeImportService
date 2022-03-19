@@ -3,14 +3,14 @@ package secondaryHeaderProcessor
 import (
 	"reflect"
 	"testing"
-	"uploader/entities"
+	"uploader/pkg/domains/users"
 )
 
 func TestFormatHeader(t *testing.T) {
 	headerFirstEntry := []string{"f. name", "l. name", "email,", "wage", "emp id", "phone"}
 	headerSecondEntry := []string{"f. name", "l. name", "email,", "wage", "emp id", "phone", "test"}
 	headerFirstOutput := []string{"FirstName", "LastName", "Email", "Salary", "Identifier", "Phone"}
-	configHeader := entities.ConfigurationHeader{
+	configHeader := users.ConfigurationHeader{
 		FullName:   []string{"name", "fullname"},
 		FirstName:  []string{"firstname", "first", "fname"},
 		MiddleName: []string{"middlename", "middle"},
@@ -23,7 +23,7 @@ func TestFormatHeader(t *testing.T) {
 	}
 	type args struct {
 		header           []string
-		configHeader     entities.ConfigurationHeader
+		configHeader     users.ConfigurationHeader
 		sizeStructHeader int
 	}
 	tests := []struct {
@@ -56,8 +56,18 @@ func TestFormatCSVExport(t *testing.T) {
 	inputHeader := []string{"FirstName", "MiddleName", "LastName", "Email", "Salary", "Identifier", "Phone"}
 	inputUserFullName := []string{"Matthew Doe", "Matthew", "Doe", "matthew.doe@test.com", "2,451.45", "RT6", ""}
 	inputHeaderFullName := []string{"FullName", "FirstName", "LastName", "Email", "Salary", "Identifier", "Phone"}
-	validUserExit := entities.ConfigurationHeaderExport{"Matthew Vargas Doe", "matthew.doe@test.com", "2,451.45", "RT6", "", ""}
-	validUserExitFullName := entities.ConfigurationHeaderExport{"Matthew Doe", "matthew.doe@test.com", "2,451.45", "RT6", "", ""}
+	validUserExit := users.ConfigurationHeaderExport{
+		Name:       "Matthew Vargas Doe",
+		Email:      "matthew.doe@test.com",
+		Salary:     "2,451.45",
+		Identifier: "RT6",
+	}
+	validUserExitFullName := users.ConfigurationHeaderExport{
+		Name:       "Matthew Doe",
+		Email:      "matthew.doe@test.com",
+		Salary:     "2,451.45",
+		Identifier: "RT6",
+	}
 
 	type args struct {
 		row    []string
@@ -66,7 +76,7 @@ func TestFormatCSVExport(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want entities.ConfigurationHeaderExport
+		want users.ConfigurationHeaderExport
 	}{
 		{
 			"Test_To_Format_String_Array_In_Struct_Header_FirstName_MiddleName_And_LastName",

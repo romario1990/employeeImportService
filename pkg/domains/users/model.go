@@ -1,4 +1,4 @@
-package entities
+package users
 
 type ConfigurationHeader struct {
 	FullName   []string `json:"FullName"`

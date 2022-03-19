@@ -5,19 +5,19 @@ import (
 	"reflect"
 	"strings"
 	"uploader/constants"
-	"uploader/entities"
-	secondaryArrayHelp "uploader/internal/adapters/secondary/arrayHelp"
 	secondaryStringHelp "uploader/internal/adapters/secondary/stringHelp"
+	secondaryStructHelp "uploader/internal/adapters/secondary/structHelp"
+	"uploader/pkg/domains/users"
 )
 
-func FormatHeader(header []string, configHeader entities.ConfigurationHeader, sizeStructHeader int) []string {
+func FormatHeader(header []string, configHeader users.ConfigurationHeader, sizeStructHeader int) []string {
 	var parseHeader []string
 	for i := 0; i < len(header); i++ {
 		word, _ := secondaryStringHelp.StandardizeColumn(header[i])
 		for j := 0; j < sizeStructHeader; j++ {
 			val := reflect.Indirect(reflect.ValueOf(configHeader))
 			nameColumn := val.Type().Field(j).Name
-			field, _ := secondaryArrayHelp.GetField(configHeader, nameColumn)
+			field, _ := secondaryStructHelp.GetField(configHeader, nameColumn)
 			contain := secondaryStringHelp.StringInSlice(word, field)
 			if contain {
 				parseHeader = append(parseHeader, nameColumn)
@@ -28,7 +28,7 @@ func FormatHeader(header []string, configHeader entities.ConfigurationHeader, si
 	return parseHeader
 }
 
-func FormatCSVExport(row []string, header []string) entities.ConfigurationHeaderExport {
+func FormatCSVExport(row []string, header []string) users.ConfigurationHeaderExport {
 	fullName := ""
 	firstName := ""
 	middleName := ""
@@ -66,7 +66,7 @@ func FormatCSVExport(row []string, header []string) entities.ConfigurationHeader
 	if name == constants.INVALIDNAME {
 		name = strings.Join([]string{firstName, middleName, lastName}, "")
 	}
-	user := entities.ConfigurationHeaderExport{
+	user := users.ConfigurationHeaderExport{
 		Name:       name,
 		Email:      email,
 		Salary:     salary,

@@ -6,16 +6,17 @@ import (
 	"io"
 	"os"
 	"uploader/constants"
-	"uploader/entities"
-	secondaryReadFile "uploader/internal/adapters/secondary/fileHelp/read"
+	secondaryFile "uploader/internal/adapters/secondary/fileHelp/file"
 	secondaryHeaderProcessor "uploader/internal/adapters/secondary/headerProcessor"
 	secondaryUserValidator "uploader/internal/adapters/secondary/userValidator"
+	"uploader/pkg/domains/users"
 )
 
-func ReadFile(f *os.File, hasHeader bool, configHeader entities.ConfigurationHeader,
-	sizeStructHeader int) ([]entities.ConfigurationHeaderExport, []entities.ConfigurationHeaderExport, error) {
+//TODO remover daqui e quabra em menas funções
+func ReadFile(f *os.File, hasHeader bool, configHeader users.ConfigurationHeader,
+	sizeStructHeader int) ([]users.ConfigurationHeaderExport, []users.ConfigurationHeaderExport, error) {
 	if f == nil {
-		return []entities.ConfigurationHeaderExport{}, []entities.ConfigurationHeaderExport{}, fmt.Errorf("no files provided")
+		return []users.ConfigurationHeaderExport{}, []users.ConfigurationHeaderExport{}, fmt.Errorf("no files provided")
 	}
 	rows := csv.NewReader(f)
 	var header []string
@@ -23,7 +24,7 @@ func ReadFile(f *os.File, hasHeader bool, configHeader entities.ConfigurationHea
 		row, _ := rows.Read()
 		header = secondaryHeaderProcessor.FormatHeader(row, configHeader, sizeStructHeader)
 	}
-	var usersValid, usersInvalid []entities.ConfigurationHeaderExport
+	var usersValid, usersInvalid []users.ConfigurationHeaderExport
 	for {
 		row, err := rows.Read()
 		if err == io.EOF {
@@ -37,7 +38,7 @@ func ReadFile(f *os.File, hasHeader bool, configHeader entities.ConfigurationHea
 		if _, err := os.Stat("./" + constants.SUCCESSPATHNAME); err == nil {
 			oldValues, err = GetDataCSV("./" + constants.SUCCESSPATHNAME)
 			if err != nil {
-				return []entities.ConfigurationHeaderExport{}, []entities.ConfigurationHeaderExport{}, fmt.Errorf("error reading existing values")
+				return []users.ConfigurationHeaderExport{}, []users.ConfigurationHeaderExport{}, fmt.Errorf("error reading existing values")
 			}
 		}
 		userValid, err := secondaryUserValidator.CheckUserValid(newUser, usersValid, oldValues)
@@ -54,8 +55,9 @@ func ReadFile(f *os.File, hasHeader bool, configHeader entities.ConfigurationHea
 	return usersValid, usersInvalid, nil
 }
 
+//TODO remover daqui e quabra em menas funções pkg
 func GetDataCSV(filename string) ([][]string, error) {
-	file, err := secondaryReadFile.Read(filename)
+	file, err := secondaryFile.Read(filename)
 	if err != nil {
 		return [][]string{}, fmt.Errorf("error trying to edit file")
 	}

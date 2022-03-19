@@ -2,12 +2,12 @@ package secondaryAllFileProcessor
 
 import (
 	"uploader/constants"
-	secondaryReadFile "uploader/internal/adapters/secondary/fileHelp/read"
+	secondaryFile "uploader/internal/adapters/secondary/fileHelp/file"
 	secondaryFileProcessor "uploader/internal/adapters/secondary/fileProcessor"
 )
 
 func Exec(hasH bool) error {
-	filesNames, err := secondaryReadFile.ReadAllNameFilesPath(constants.PATHPPENDINGROCESSED)
+	filesNames, err := secondaryFile.ReadAllNameFilesPath(constants.PATHPPENDINGROCESSED)
 	if err != nil {
 		return err
 	}

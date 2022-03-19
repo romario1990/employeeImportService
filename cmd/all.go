@@ -34,7 +34,7 @@ func init() {
 }
 
 func processAllFiles(hasH bool) error {
-	err := primaryAll.Exec(hasH)
+	err := primaryAll.ExecAll(hasH)
 	if err != nil {
 		return err
 	}

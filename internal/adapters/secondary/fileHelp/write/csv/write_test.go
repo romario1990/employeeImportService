@@ -1,4 +1,4 @@
-package secondaryWriteFile
+package csv
 
 import (
 	"encoding/csv"
@@ -7,11 +7,11 @@ import (
 	"reflect"
 	"testing"
 	"uploader/constants"
-	"uploader/entities"
+	"uploader/pkg/domains/users"
 )
 
 func setUp() {
-	defaultPath := "./../../../../../transfer/mock/"
+	defaultPath := "./../../../../../../transfer/mock/"
 	file1, _ := os.Create(defaultPath + constants.SUCCESSPATHNAME)
 	w := csv.NewWriter(file1)
 	for _, row := range constants.HEADER {
@@ -30,15 +30,15 @@ func setUp() {
 }
 
 func tearDown() {
-	defaultPath := "./../../../../../transfer/mock/"
+	defaultPath := "./../../../../../../transfer/mock/"
 	os.Remove(defaultPath + constants.SUCCESSPATHNAME)
 	os.Remove(defaultPath + constants.ERRORPATHNAME)
 }
 
 func TestSaveUsersValid(t *testing.T) {
 	setUp()
-	defaultPath := "./../../../../../transfer/mock/"
-	validUsers := []entities.ConfigurationHeaderExport{
+	defaultPath := "./../../../../../../transfer/mock/"
+	validUsers := []users.ConfigurationHeaderExport{
 		{"John Doe", "doe@test.com", "$10.00", "1", "", ""},
 		{"Mary Jane", "mary@tes.com", "$15", "2", "", ""},
 		{"Max Topperson", "max@test.com", "$11", "3", "", ""},
@@ -51,7 +51,7 @@ func TestSaveUsersValid(t *testing.T) {
 	}
 	type args struct {
 		oldValues  [][]string
-		validUsers []entities.ConfigurationHeaderExport
+		validUsers []users.ConfigurationHeaderExport
 		path       string
 		userValid  bool
 	}
@@ -92,8 +92,8 @@ func TestSaveUsersValid(t *testing.T) {
 
 func TestSaveUsersInValid(t *testing.T) {
 	setUp()
-	defaultPath := "./../../../../../transfer/mock/"
-	inValidUsers := []entities.ConfigurationHeaderExport{
+	defaultPath := "./../../../../../../transfer/mock/"
+	inValidUsers := []users.ConfigurationHeaderExport{
 		{"Alfred Donald", "", "$11.5", "4", "", ""},
 		{"Jane Doe", "doe@test.com", "$8.45", "5", "", ""},
 	}
@@ -104,7 +104,7 @@ func TestSaveUsersInValid(t *testing.T) {
 	}
 	type args struct {
 		oldValues  [][]string
-		validUsers []entities.ConfigurationHeaderExport
+		validUsers []users.ConfigurationHeaderExport
 		path       string
 		userValid  bool
 	}
@@ -145,8 +145,8 @@ func TestSaveUsersInValid(t *testing.T) {
 
 func TestSaveInFile(t *testing.T) {
 	setUp()
-	defaultPath := "./../../../../../transfer/mock/"
-	validUsers := []entities.ConfigurationHeaderExport{
+	defaultPath := "./../../../../../../transfer/mock/"
+	validUsers := []users.ConfigurationHeaderExport{
 		{"John Doe", "doe@test.com", "$10.00", "1", "", ""},
 		{"Mary Jane", "mary@tes.com", "$15", "2", "", ""},
 		{"Max Topperson", "max@test.com", "$11", "3", "", ""},
@@ -161,7 +161,7 @@ func TestSaveInFile(t *testing.T) {
 	type args struct {
 		oldValues [][]string
 		filename  string
-		users     []entities.ConfigurationHeaderExport
+		users     []users.ConfigurationHeaderExport
 	}
 	tests := []struct {
 		name    string
