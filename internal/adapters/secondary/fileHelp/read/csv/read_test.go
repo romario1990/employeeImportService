@@ -1,15 +1,15 @@
-package parseService
+package secondaryReadFileCSV
 
 import (
 	"os"
 	"reflect"
 	"testing"
-	"uploader/src/entities"
+	"uploader/entities"
 )
 
-func TestReadCSV(t *testing.T) {
-	filenameWithHeader := "../../../transfer/mock/pending/roster1.csv"
-	filenameNonExistent := "../../../transfer/mock/pending/non_existent_file.csv"
+func TestReadFile(t *testing.T) {
+	filenameWithHeader := "../../../../../../transfer/mock/transfer/pending/roster1.csv"
+	filenameNonExistent := "../../../../../../transfer/mock/transfer/pending/non_existent_file.csv"
 	testCaseWithHeader, _ := os.Open(filenameWithHeader)
 	testCaseNonExistent, _ := os.Open(filenameNonExistent)
 	configHeader := entities.ConfigurationHeader{
@@ -37,7 +37,7 @@ func TestReadCSV(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			"Read CSV File With Header Test Case",
+			"Read csv File With Header Test Case",
 			args{testCaseWithHeader, true, configHeader, 9},
 			[]entities.ConfigurationHeaderExport{
 				{Name: "John Doe", Email: "doe@test.com", Salary: "$10.00", Identifier: "1"},
@@ -51,14 +51,14 @@ func TestReadCSV(t *testing.T) {
 			false,
 		},
 		{
-			"Non Existent CSV File With Header Test Case",
+			"Non Existent csv File With Header Test Case",
 			args{testCaseNonExistent, true, configHeader, 9},
 			[]entities.ConfigurationHeaderExport{},
 			[]entities.ConfigurationHeaderExport{},
 			true,
 		},
 		{
-			"Non Existent CSV File Without Header Test Case",
+			"Non Existent csv File Without Header Test Case",
 			args{testCaseNonExistent, false, configHeader, 9},
 			[]entities.ConfigurationHeaderExport{},
 			[]entities.ConfigurationHeaderExport{},
@@ -67,7 +67,7 @@ func TestReadCSV(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := ReadCSV(tt.args.f, tt.args.hasHeader, tt.args.configHeader, tt.args.sizeStructHeader)
+			got, got1, err := ReadFile(tt.args.f, tt.args.hasHeader, tt.args.configHeader, tt.args.sizeStructHeader)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ReadCSV() error = %v, wantErr %v", err, tt.wantErr)
 				return

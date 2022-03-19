@@ -1,23 +1,24 @@
-package formatService
+package secondaryHeaderProcessor
 
 import (
 	"fmt"
 	"reflect"
 	"strings"
 	"uploader/constants"
-	"uploader/src/entities"
-	"uploader/src/services/help"
+	"uploader/entities"
+	secondaryArrayHelp "uploader/internal/adapters/secondary/arrayHelp"
+	secondaryStringHelp "uploader/internal/adapters/secondary/stringHelp"
 )
 
 func FormatHeader(header []string, configHeader entities.ConfigurationHeader, sizeStructHeader int) []string {
 	var parseHeader []string
 	for i := 0; i < len(header); i++ {
-		word, _ := help.StandardizeColumn(header[i])
+		word, _ := secondaryStringHelp.StandardizeColumn(header[i])
 		for j := 0; j < sizeStructHeader; j++ {
 			val := reflect.Indirect(reflect.ValueOf(configHeader))
 			nameColumn := val.Type().Field(j).Name
-			field, _ := help.GetField(configHeader, nameColumn)
-			contain := help.StringInSlice(word, field)
+			field, _ := secondaryArrayHelp.GetField(configHeader, nameColumn)
+			contain := secondaryStringHelp.StringInSlice(word, field)
 			if contain {
 				parseHeader = append(parseHeader, nameColumn)
 				break

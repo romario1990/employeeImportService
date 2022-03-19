@@ -18,7 +18,7 @@ import (
 //	return conf, nil
 //}
 
-//Load is a function that returns the CSV header configuration
+//Load is a function that returns the csv header configuration
 func LoadConfigHeader() (*viper.Viper, error) {
 	conf := viper.GetViper()
 	conf.AddConfigPath(".")

@@ -1,9 +1,9 @@
-package formatService
+package secondaryHeaderProcessor
 
 import (
 	"reflect"
 	"testing"
-	"uploader/src/entities"
+	"uploader/entities"
 )
 
 func TestFormatHeader(t *testing.T) {

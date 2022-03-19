@@ -1,12 +1,8 @@
-package help
+package secondaryStringHelp
 
 import (
-	"fmt"
-	"reflect"
 	"regexp"
 	"strings"
-	"uploader/constants"
-	"uploader/src/entities"
 )
 
 func StringInSlice(columnName string, list []string) bool {
@@ -16,24 +12,6 @@ func StringInSlice(columnName string, list []string) bool {
 		}
 	}
 	return false
-}
-
-func contains(slice []string, item string) bool {
-	set := make(map[string]struct{}, len(slice))
-	for _, s := range slice {
-		set[s] = struct{}{}
-	}
-	_, ok := set[item]
-	return ok
-}
-
-func GetField(v entities.ConfigurationHeader, field string) ([]string, error) {
-	if !contains(constants.HEADERCONFIGURATION, field) {
-		return []string{}, fmt.Errorf("field not configured")
-	}
-	r := reflect.ValueOf(v)
-	f := reflect.Indirect(r).FieldByName(field)
-	return f.Interface().([]string), nil
 }
 
 func RemoveSpecialChar(word string) (string, error) {

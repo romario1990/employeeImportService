@@ -29,7 +29,7 @@ func init() {
 		constants.HASHEADER,
 		string(constants.SHORTHASHEADER),
 		true,
-		"If the CSV file has a col title header or not",
+		"If the csv file has a col title header or not",
 	)
 }
 

@@ -29,7 +29,7 @@ const (
 
 // CSV type files
 const (
-	CSV = "CSV"
+	CSV = "csv"
 )
 
 // constants

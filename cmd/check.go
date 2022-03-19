@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"strings"
 	"uploader/cmd/help"
 	"uploader/constants"
 	primaryCheck "uploader/internal/adapters/primary/cmd/check"
@@ -45,22 +43,22 @@ func init() {
 		constants.HASHEADER,
 		string(constants.SHORTHASHEADER),
 		true,
-		"If the CSV file has a col title header or not",
+		"If the csv file has a col title header or not",
 	)
 	checkCmd.Flags().StringVarP(
 		&fileType,
 		constants.FILETYPE,
 		string(constants.SHORTFILETYPE),
-		"CSV",
+		"csv",
 		"sets the file type",
 	)
 	checkCmd.MarkFlagRequired(constants.FILE)
 }
 
 func checkFile(filename string, hasH bool, fileType string) error {
-	if strings.ToUpper(fileType) != constants.CSV {
-		return fmt.Errorf("unsupported file format %s", fileType)
-	}
+	//if strings.ToUpper(fileType) != constants.CSV {
+	//	return fmt.Errorf("unsupported file format %s", fileType)
+	//}
 	err := primaryCheck.Exec(filename, hasH)
 	if err != nil {
 		return err

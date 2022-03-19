@@ -4,25 +4,28 @@ import (
 	"fmt"
 	"uploader/config"
 	"uploader/constants"
-	"uploader/src/entities"
-	"uploader/src/services/ioUsefulService"
-	"uploader/src/services/parseService"
+	"uploader/entities"
+	secondaryCreateFile "uploader/internal/adapters/secondary/fileHelp/create"
+	secondaryMoveFile "uploader/internal/adapters/secondary/fileHelp/move"
+	secondaryReadFile "uploader/internal/adapters/secondary/fileHelp/read"
+	secondaryReadFileCSV "uploader/internal/adapters/secondary/fileHelp/read/csv"
+	secondaryWriteFile "uploader/internal/adapters/secondary/fileHelp/write"
 )
 
 func Exec(filename string, hasH bool) error {
 	fmt.Println("############################ STARTING ############################")
 	fmt.Println("---------------------------- Start of processing information ----------------------------")
-	file, err := ioUsefulService.Read(filename)
+	file, err := secondaryReadFile.Read(filename)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	ioUsefulService.InitExec(nil)
+	secondaryCreateFile.InitExec(nil)
 	var usersValid, userInvalid []entities.ConfigurationHeaderExport
 	confHeader, err := config.LoadConfigHeader()
 	if err != nil {
 		file.Close()
-		ioUsefulService.MoveFileProcessedError(filename, "")
+		secondaryMoveFile.MoveFileProcessedError(filename, "")
 		return fmt.Errorf("headerconfiguration.json file not configured")
 	}
 	configHeader := entities.ConfigurationHeader{
@@ -36,22 +39,31 @@ func Exec(filename string, hasH bool) error {
 		Phone:      confHeader.GetStringSlice(constants.PHONE),
 		Mobile:     confHeader.GetStringSlice(constants.MOBILE),
 	}
-	fmt.Printf("### The %v file is being processed", filename)
-	fmt.Printf("### Header de configuration file = %v", configHeader)
-	usersValid, userInvalid, err = parseService.ReadCSV(file, hasH, configHeader, 9)
+	fmt.Printf("### The \"%v\" file is being processed\n", filename)
+	fmt.Printf("### Header de configuration file = %v\n", configHeader)
+	usersValid, userInvalid, err = secondaryReadFileCSV.ReadFile(file, hasH, configHeader, 9)
 	if err != nil {
 		file.Close()
-		ioUsefulService.MoveFileProcessedError(filename, "")
+		secondaryMoveFile.MoveFileProcessedError(filename, "")
 		return err
 	}
-	err = ioUsefulService.SaveUsers(usersValid, userInvalid, "", "")
+	oldValues, err := secondaryReadFileCSV.GetDataCSV(constants.SUCCESSPATHNAME)
+	fmt.Println("AQUIIIIIIIII 1 ", usersValid)
+	fmt.Println("AQUIIIIIIIII 2 ", userInvalid)
+	fmt.Println("AQUIIIIIIIII 3 ", oldValues)
+	if err != nil {
+		return fmt.Errorf("error reading existing values")
+	}
+	err = secondaryWriteFile.SaveUsers(oldValues, usersValid, "", true)
+	err = secondaryWriteFile.SaveUsers(oldValues, userInvalid, "", false)
+	fmt.Println("AQUIIIIIIIII 4 ")
 	if err != nil {
 		file.Close()
-		ioUsefulService.MoveFileProcessedError(filename, "")
+		secondaryMoveFile.MoveFileProcessedError(filename, "")
 		return err
 	}
 	file.Close()
-	err = ioUsefulService.MoveFileProcessed(filename, "")
+	err = secondaryMoveFile.MoveFileProcessed(filename, "")
 	if err != nil {
 		return err
 	}
