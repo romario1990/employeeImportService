@@ -18,7 +18,11 @@ var allCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return processAllFiles(hasH)
+		fileType, err := help.GetString(cmd, constants.FILETYPE)
+		if err != nil {
+			return err
+		}
+		return processAllFiles(hasH, fileType)
 	},
 }
 
@@ -31,10 +35,17 @@ func init() {
 		true,
 		"If the csv file has a col title header or not",
 	)
+	allCmd.Flags().StringVarP(
+		&fileType,
+		constants.FILETYPE,
+		string(constants.SHORTFILETYPE),
+		"csv",
+		"sets the file type",
+	)
 }
 
-func processAllFiles(hasH bool) error {
-	err := primaryAll.ExecAll(hasH)
+func processAllFiles(hasH bool, fileType string) error {
+	err := primaryAll.ExecAll(hasH, fileType)
 	if err != nil {
 		return err
 	}

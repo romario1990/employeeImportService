@@ -1,4 +1,4 @@
-package secondaryFile
+package fileHelp
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"os"
 	"regexp"
 	"uploader/constants"
-	secondaryWriteFile "uploader/internal/adapters/secondary/fileHelp/write/csv"
+	secondaryWriteFile "uploader/helpers/fileHelp/write/csv"
 )
 
 func createCSV(path string, filename string, extension string, initialValue [][]string) error {

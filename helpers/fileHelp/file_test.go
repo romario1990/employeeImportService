@@ -1,4 +1,4 @@
-package secondaryFile
+package fileHelp
 
 import (
 	"io"
@@ -9,20 +9,20 @@ import (
 )
 
 func setUp() {
-	defaultPath := "./../../../../../transfer/mock/"
+	defaultPath := "./../../transfer/mock/"
 	file3, _ := os.Create(defaultPath + "transfer/processed/roster1.csv")
 	file3.Close()
 }
 
 func tearDown() {
-	defaultPath := "./../../../../../transfer/mock/"
+	defaultPath := "./../../transfer/mock/"
 	os.Remove(defaultPath + "transfer/processed/roster1.csv")
 	os.Remove(defaultPath + "transfer/processedError/roster1.csv")
 }
 
 func TestMoveFileProcessed(t *testing.T) {
-	pathProcessedSuccess := "./../../../../../transfer/mock/transfer/processed/"
-	fileName := "./../../../../../transfer/mock/transfer/pending/roster1.csv"
+	pathProcessedSuccess := "./../../transfer/mock/transfer/processed/"
+	fileName := "./../../transfer/mock/transfer/pending/roster1.csv"
 	type args struct {
 		filename   string
 		defaultPah string
@@ -42,14 +42,14 @@ func TestMoveFileProcessed(t *testing.T) {
 			if err := MoveFileProcessed(tt.args.filename, tt.args.defaultPah); (err != nil) != tt.wantErr {
 				t.Errorf("MoveFileProcessed() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if _, err := os.Stat("./../../../../../transfer/mock/transfer/processed/roster1.csv"); err != nil {
+			if _, err := os.Stat("./../../transfer/mock/transfer/processed/roster1.csv"); err != nil {
 				t.Errorf("TestMoveFileProcessed() error, error moving processed file = roster1.csv")
 			}
-			if _, err := os.Stat("./../../../../../transfer/mock/transfer/pending/roster1.csv"); err == nil {
+			if _, err := os.Stat("./../../transfer/mock/transfer/pending/roster1.csv"); err == nil {
 				t.Errorf("TestMoveFileProcessed() error, error moving pending file = roster1.csv")
 			}
-			source := "./../../../../../transfer/mock/transfer/processed/roster1.csv"
-			destination := "./../../../../../transfer/mock/transfer/pending/roster1.csv"
+			source := "./../../transfer/mock/transfer/processed/roster1.csv"
+			destination := "./../../transfer/mock/transfer/pending/roster1.csv"
 			src, _ := os.Open(source)
 			defer src.Close()
 			fi, _ := src.Stat()
@@ -67,8 +67,8 @@ func TestMoveFileProcessed(t *testing.T) {
 
 func TestMoveFileProcessedError(t *testing.T) {
 	setUp()
-	pathProcessedError := "./../../../../../transfer/mock/transfer/processedError/"
-	fileName := "./../../../../../transfer/mock/transfer/processed/roster1.csv"
+	pathProcessedError := "./../../transfer/mock/transfer/processedError/"
+	fileName := "./../../transfer/mock/transfer/processed/roster1.csv"
 	type args struct {
 		filename   string
 		defaultPah string
@@ -88,10 +88,10 @@ func TestMoveFileProcessedError(t *testing.T) {
 			if err := MoveFileProcessedError(tt.args.filename, tt.args.defaultPah); (err != nil) != tt.wantErr {
 				t.Errorf("MoveFileProcessedError() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if _, err := os.Stat("./../../../../../transfer/mock/transfer/processed/roster1.csv"); err == nil {
+			if _, err := os.Stat("./../../transfer/mock/transfer/processed/roster1.csv"); err == nil {
 				t.Errorf("TestMoveFileProcessedError() error, error moving processed error file = roster1.csv")
 			}
-			if _, err := os.Stat("./../../../../../transfer/mock/transfer/processedError/roster1.csv"); err != nil {
+			if _, err := os.Stat("./../../transfer/mock/transfer/processedError/roster1.csv"); err != nil {
 				t.Errorf("TestMoveFileProcessedError() error, error moving processed file = roster1.csv")
 			}
 			tearDown()
@@ -100,7 +100,7 @@ func TestMoveFileProcessedError(t *testing.T) {
 }
 
 func TestCreateDefaultFiles(t *testing.T) {
-	defaultPath := "./../../../../../transfer/mock/"
+	defaultPath := "./../../transfer/mock/"
 	type args struct {
 		header      [][]string
 		defaultPath string
@@ -140,6 +140,7 @@ func TestCreateDefaultFiles(t *testing.T) {
 }
 
 func TestReadAllNameFilesPath(t *testing.T) {
+	fileName := "./../../transfer/mock/transfer/pending/"
 	type args struct {
 		pathName string
 	}
@@ -149,7 +150,12 @@ func TestReadAllNameFilesPath(t *testing.T) {
 		want    []string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			"Test_Read_All_Files_In_A_Directory",
+			args{fileName},
+			[]string{"roster1.csv", "roster_no_header.csv"},
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

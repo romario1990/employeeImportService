@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 	"uploader/constants"
-	"uploader/pkg/domains/users"
+	"uploader/pkg/core/domains/users"
 )
 
 func setUp() {

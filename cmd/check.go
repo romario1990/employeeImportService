@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"strings"
 	"uploader/cmd/help"
@@ -58,10 +57,7 @@ func init() {
 }
 
 func checkFile(filename string, hasH bool, fileType string) error {
-	if strings.ToLower(fileType) != constants.CSV {
-		return fmt.Errorf("unsupported file format %s", fileType)
-	}
-	err := primaryCheck.Exec(filename, hasH)
+	err := primaryCheck.Exec(filename, hasH, strings.ToLower(fileType))
 	if err != nil {
 		return err
 	}

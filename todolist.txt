@@ -1,12 +1,17 @@
 PRÓXIMAS ETAPAS ATÉ DOMINGO
 	1. Inserir arquetetura hexagonal
+--criar parametro para path dos arquivos a ser processado
+--criar secondary para criar log, o ativar vai ser add por parâmetro
+--criar interfaces	
 	2. Criar go routines para processar.
 		2.1 Criar flag para mostrar ou não mostrar o log
-	3. Criar server http
-	4. Adicionar quantidade de registro para escrita no arquivo default 1000
+		
 	5. Adicionar command limpar arquivos
 	6. Salvar dados originais invalidos
 	7. Adcionar coluna do erro nos arquivos invalidos
+	
+	3. Adicionar quantidade de registro para escrita no arquivo default 1000
+	4. Criar server http
 	8. Adicionar suporte a outros tipos de arquivos
 	9. Separar projeto para criar arquivos com hash e prefixo no nome para unifircar no final
 	10. Adiconar redis para criar cache dos dados salvos
@@ -14,7 +19,6 @@ PRÓXIMAS ETAPAS ATÉ DOMINGO
 	11. Criar serviço com mensageria
 		11.1 Receber lista de arquivo para processar na mensagem
 		11.2 Conectar em S3 para ler próximo arquivo para processar
-
 
 
 
@@ -43,10 +47,9 @@ X		2.2. O e-mail do funcionário deve ser exclusivo
 X		2.3. O ID do funcionário deve ser exclusivo
 X			validar user validos
 X			validar user invalidos
-HOJE
-	3. Emita um resumo das etapas de processamento no console
+X	3. Emita um resumo das etapas de processamento no console
 X	4. Crie testes de unidade
-		4.1 Processar todos os arquivos
+X		4.1 Processar todos os arquivos
 X	5. O projeto deve ser implementado em Golang 1.16+
 X	6. O projeto deve ter uma estrutura de pastas clara, escalável e simples (não um único script de arquivo)
 DOMINGO

@@ -2,16 +2,31 @@ package secondaryFileProcessor
 
 import (
 	"fmt"
+	"os"
+	"strings"
 	"uploader/config"
 	"uploader/constants"
-	secondaryFile "uploader/internal/adapters/secondary/fileHelp/file"
-	secondaryReadFileCSV "uploader/internal/adapters/secondary/fileHelp/read/csv"
-	secondaryWriteFile "uploader/internal/adapters/secondary/fileHelp/write/csv"
-	"uploader/pkg/domains/users"
+	secondaryFile "uploader/helpers/fileHelp"
+	secondaryWriteFile "uploader/helpers/fileHelp/write/csv"
+	"uploader/helpers/stringHelp"
+	users2 "uploader/pkg/core/domains/users"
+	file3 "uploader/pkg/core/repositories/file"
 )
 
-func Exec(filename string, hasH bool) error {
+func Exec(filename string, hasH bool, fileType string) error {
+	if strings.ToLower(fileType) != constants.CSV {
+		return fmt.Errorf("unsupported file format %s", fileType)
+	}
 	fmt.Println("############################ STARTING ############################")
+	var userRepo users2.UserRepository
+	var fileRepo file3.FileRepository
+	if fileType == constants.CSV {
+		userRepo = users2.NewUserRepo()
+		fileRepo = file3.NewFileCSVRepo()
+		userRepo.FindAll()
+		userRepo.Save([]users2.ConfigurationHeaderExport{})
+	}
+
 	fmt.Println("---------------------------- Start of processing information ----------------------------")
 	file, err := secondaryFile.Read(filename)
 	if err != nil {
@@ -19,14 +34,14 @@ func Exec(filename string, hasH bool) error {
 	}
 	defer file.Close()
 	secondaryFile.InitExec(nil)
-	var usersValid, userInvalid []users.ConfigurationHeaderExport
+	var usersValid, userInvalid []users2.ConfigurationHeaderExport
 	confHeader, err := config.LoadConfigHeader()
 	if err != nil {
 		file.Close()
 		secondaryFile.MoveFileProcessedError(filename, "")
 		return fmt.Errorf("headerconfiguration.json file not configured")
 	}
-	configHeader := users.ConfigurationHeader{
+	configHeader := users2.ConfigurationHeader{
 		FullName:   confHeader.GetStringSlice(constants.FULLNAME),
 		FirstName:  confHeader.GetStringSlice(constants.FIRSTNAME),
 		MiddleName: confHeader.GetStringSlice(constants.MIDDLENAME),
@@ -39,22 +54,46 @@ func Exec(filename string, hasH bool) error {
 	}
 	fmt.Printf("### The \"%v\" file is being processed\n", filename)
 	fmt.Printf("### Header de configuration file = %v\n", configHeader)
-	usersValid, userInvalid, err = secondaryReadFileCSV.ReadFile(file, hasH, configHeader, 9)
+	oldValues3, err := fileRepo.GetData(filename)
+	if err != nil {
+		return fmt.Errorf("error reading existing values")
+	}
+	var header []string
+	if hasH {
+		header = userRepo.FormatHeader(oldValues3[0], configHeader, 9)
+		oldValues3 = secondaryStringHelp.RemoveIndex(oldValues3, 0)
+	}
+	users2, err := userRepo.ConvertDataToHeaderExport(oldValues3, header)
+	var oldValues2 [][]string
+	for _, newUser := range users2 {
+		if _, err := os.Stat("./" + constants.SUCCESSPATHNAME); err == nil {
+			oldValues2, err = fileRepo.GetData("./" + constants.SUCCESSPATHNAME)
+			if err != nil {
+				return fmt.Errorf("error reading existing values")
+			}
+		}
+		userValid, err := userRepo.CheckUserValid(newUser, usersValid, oldValues2)
+		if err != nil {
+			return err
+		}
+		if userValid {
+			usersValid = append(usersValid, newUser)
+		} else {
+			userInvalid = append(userInvalid, newUser)
+		}
+	}
+
 	if err != nil {
 		file.Close()
 		secondaryFile.MoveFileProcessedError(filename, "")
 		return err
 	}
-	oldValues, err := secondaryReadFileCSV.GetDataCSV(constants.SUCCESSPATHNAME)
-	fmt.Println("AQUIIIIIIIII 1 ", usersValid)
-	fmt.Println("AQUIIIIIIIII 2 ", userInvalid)
-	fmt.Println("AQUIIIIIIIII 3 ", oldValues)
+	oldValues, err := fileRepo.GetData(constants.SUCCESSPATHNAME)
 	if err != nil {
 		return fmt.Errorf("error reading existing values")
 	}
 	err = secondaryWriteFile.SaveUsers(oldValues, usersValid, "", true)
 	err = secondaryWriteFile.SaveUsers(oldValues, userInvalid, "", false)
-	fmt.Println("AQUIIIIIIIII 4 ")
 	if err != nil {
 		file.Close()
 		secondaryFile.MoveFileProcessedError(filename, "")

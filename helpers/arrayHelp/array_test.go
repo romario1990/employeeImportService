@@ -1,4 +1,4 @@
-package secondaryArrayHelp
+package arrayHelp
 
 import (
 	"testing"

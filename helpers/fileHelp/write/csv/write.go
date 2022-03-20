@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"uploader/constants"
-	"uploader/pkg/domains/users"
+	"uploader/pkg/core/domains/users"
 )
 
 func WriteCSV(file *os.File, values [][]string) {
