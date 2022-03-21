@@ -1,4 +1,4 @@
-package secondaryEmailValidator
+package emailValidator
 
 import "testing"
 

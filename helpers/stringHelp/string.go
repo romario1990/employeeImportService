@@ -1,4 +1,4 @@
-package secondaryStringHelp
+package stringHelp
 
 import (
 	"regexp"

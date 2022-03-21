@@ -91,7 +91,7 @@ func (userService *userService) Exec() error {
 	var header []string
 	if userService.hasH {
 		header = userService.FormatHeader(data[0], userService.configHeader, 9)
-		data = secondaryStringHelp.RemoveIndex(data, 0)
+		data = stringHelp.RemoveIndex(data, 0)
 	}
 	users, err := userService.ConvertDataToHeaderExport(data, header)
 	for _, newUser := range users {
@@ -150,12 +150,12 @@ func (userService *userService) ConvertDataToHeaderExport(data [][]string, heade
 func (userService *userService) FormatHeader(header []string, configHeader userModel.ConfigurationHeader, sizeStructHeader int) []string {
 	var parseHeader []string
 	for i := 0; i < len(header); i++ {
-		word, _ := secondaryStringHelp.StandardizeColumn(header[i])
+		word, _ := stringHelp.StandardizeColumn(header[i])
 		for j := 0; j < sizeStructHeader; j++ {
 			val := reflect.Indirect(reflect.ValueOf(configHeader))
 			nameColumn := val.Type().Field(j).Name
 			field, _ := userService.GetField(configHeader, nameColumn)
-			contain := secondaryStringHelp.StringInSlice(word, field)
+			contain := stringHelp.StringInSlice(word, field)
 			if contain {
 				parseHeader = append(parseHeader, nameColumn)
 				break
@@ -167,7 +167,7 @@ func (userService *userService) FormatHeader(header []string, configHeader userM
 
 func (userService *userService) CheckUserValid(user userModel.ConfigurationHeaderExport, users []userModel.ConfigurationHeaderExport) bool {
 	valid := true
-	if user.Email == "" || !secondaryEmailValidator.ValidateEmail(user.Email) {
+	if user.Email == "" || !emailValidator.ValidateEmail(user.Email) {
 		return false
 	}
 	if user.Identifier == "" {
