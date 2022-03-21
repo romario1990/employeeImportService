@@ -9,11 +9,6 @@ const (
 	POSITIONHEADERIDENTIFIER = 3
 )
 
-//
-const (
-	EXTENSIONCSV = ".csv"
-)
-
 // file names
 const (
 	SUCCESSPATH          = "transfer/success/"
@@ -27,23 +22,20 @@ const (
 	PATHPPENDINGROCESSED = "./transfer/pending/"
 )
 
-// CSV type files
-const (
-	CSV = "csv"
-)
-
 // constants
 const (
-	FULLNAME    = "FullName"
-	FIRSTNAME   = "FirstName"
-	MIDDLENAME  = "MiddleName"
-	LASTNAME    = "LastName"
-	EMAIL       = "Email"
-	SALARY      = "Salary"
-	IDENTIFIER  = "Identifier"
-	PHONE       = "Phone"
-	MOBILE      = "Mobile"
-	INVALIDNAME = ""
+	FULLNAME     = "FullName"
+	FIRSTNAME    = "FirstName"
+	MIDDLENAME   = "MiddleName"
+	LASTNAME     = "LastName"
+	EMAIL        = "Email"
+	SALARY       = "Salary"
+	IDENTIFIER   = "Identifier"
+	PHONE        = "Phone"
+	MOBILE       = "Mobile"
+	INVALIDNAME  = ""
+	CSV          = "csv"
+	EXTENSIONCSV = ".csv"
 )
 
 //[command] [flags]

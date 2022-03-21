@@ -1,8 +1,7 @@
 PRÓXIMAS ETAPAS ATÉ DOMINGO
-	1. Inserir arquetetura hexagonal
---criar parametro para path dos arquivos a ser processado
---criar secondary para criar log, o ativar vai ser add por parâmetro
---criar interfaces	
+		--criar parametro para path dos arquivos a ser processado
+		--criar secondary para criar log, o ativar vai ser add por parâmetro
+		--criar interfaces	
 	2. Criar go routines para processar.
 		2.1 Criar flag para mostrar ou não mostrar o log
 		

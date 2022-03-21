@@ -5,7 +5,7 @@ import (
 	"strings"
 	"uploader/cmd/help"
 	"uploader/constants"
-	primaryCheck "uploader/internal/adapters/primary/cmd/check"
+	"uploader/handlers/cmd/check"
 )
 
 // checkCmd represents the checkCmd command
@@ -57,7 +57,7 @@ func init() {
 }
 
 func checkFile(filename string, hasH bool, fileType string) error {
-	err := primaryCheck.Exec(filename, hasH, strings.ToLower(fileType))
+	err := check.Exec(filename, hasH, strings.ToLower(fileType))
 	if err != nil {
 		return err
 	}

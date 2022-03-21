@@ -23,7 +23,7 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf(
-			"Use \"uploader --services\" for more information about a command.",
+			"Use \"uploader --help\" for more information about a command.",
 		)
 	},
 }
@@ -42,7 +42,7 @@ func init() {
 		&cfgFile,
 		"config",
 		"",
-		"config file (default is ./.env)",
+		"config file (default is ./.headerConfiguration)",
 	)
 }
 

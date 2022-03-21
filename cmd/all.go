@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"uploader/cmd/help"
 	"uploader/constants"
-	"uploader/internal/adapters/primary/cmd/all"
+	"uploader/handlers/cmd/all"
 )
 
 // allCmd represents the allCmd command
@@ -45,7 +45,7 @@ func init() {
 }
 
 func processAllFiles(hasH bool, fileType string) error {
-	err := primaryAll.ExecAll(hasH, fileType)
+	err := all.ExecAll(hasH, fileType)
 	if err != nil {
 		return err
 	}

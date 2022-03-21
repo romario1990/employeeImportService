@@ -1,26 +1,32 @@
 package fileHelp
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
-	"regexp"
-	"uploader/constants"
-	secondaryWriteFile "uploader/helpers/fileHelp/write/csv"
 )
 
-func createCSV(path string, filename string, extension string, initialValue [][]string) error {
-	file, err := os.Create(path + filename + extension)
+func CreateFileCSV(filePathName string, initialValue [][]string) error {
+	file, err := os.Create(filePathName)
 	if err != nil {
-		return fmt.Errorf("unable to create output file " + filename)
+		return fmt.Errorf("unable to create output file " + filePathName)
 	}
-	secondaryWriteFile.WriteCSV(file, initialValue)
+	WriteCSV(file, initialValue)
 	file.Close()
 	return nil
 }
 
-func moveFile(source, destination string) (err error) {
+func WriteCSV(file *os.File, values [][]string) {
+	w := csv.NewWriter(file)
+	for _, row := range values {
+		_ = w.Write(row)
+	}
+	w.Flush()
+}
+
+func MoveFile(source, destination string) (err error) {
 	src, err := os.Open(source)
 	if err != nil {
 		return err
@@ -58,26 +64,6 @@ func moveFile(source, destination string) (err error) {
 	return nil
 }
 
-func MoveFileProcessed(filename string, defaultPah string) error {
-	if defaultPah == "" {
-		defaultPah = constants.PATHPROCESSED
-	}
-	var re = regexp.MustCompile(`^(.*/)?(?:$|(.+?)(?:(\.[^.]*$)|$))`)
-	newPath := re.FindStringSubmatch(filename)
-	err := moveFile(filename, defaultPah+newPath[2]+".csv")
-	return err
-}
-
-func MoveFileProcessedError(filename string, defaultPah string) error {
-	if defaultPah == "" {
-		defaultPah = constants.PATHPROCESSEDERROR
-	}
-	var re = regexp.MustCompile(`^(.*/)?(?:$|(.+?)(?:(\.[^.]*$)|$))`)
-	newPath := re.FindStringSubmatch(filename)
-	err := moveFile(filename, defaultPah+newPath[2]+".csv")
-	return err
-}
-
 func Read(filename string) (*os.File, error) {
 	f, err := os.Open(filename)
 	if err != nil {
@@ -96,36 +82,4 @@ func ReadAllNameFilesPath(pathName string) ([]string, error) {
 		filesName = append(filesName, file.Name())
 	}
 	return filesName, nil
-}
-
-func CreateDefaultFiles(header [][]string, defaultPath string) error {
-	if defaultPath == "" {
-		defaultPath = "./"
-	}
-	if _, err := os.Stat(defaultPath + constants.SUCCESSPATHNAME); err != nil {
-		fmt.Println("----------- Create valid data output file -----------")
-		err = createCSV(defaultPath+constants.SUCCESSPATH, constants.SUCCESSNAMEFILE, constants.EXTENSIONCSV, header)
-		if err != nil {
-			return err
-		}
-	}
-	if _, err := os.Stat(defaultPath + constants.ERRORPATHNAME); err != nil {
-		fmt.Println("----------- Create invalid data output file -----------")
-		err = createCSV(defaultPath+constants.ERRORPATH, constants.ERRORNAMEFILE, constants.EXTENSIONCSV, header)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func InitExec(header [][]string) (err error) {
-	if header == nil {
-		header = constants.HEADER
-	}
-	err = CreateDefaultFiles(header, "")
-	if err != nil {
-		return err
-	}
-	return nil
 }
