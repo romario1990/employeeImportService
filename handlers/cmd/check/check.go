@@ -2,6 +2,7 @@ package check
 
 import (
 	"fmt"
+	"os"
 	"uploader/config"
 	"uploader/constants"
 	"uploader/internal/core/domains/model/userModel"
@@ -28,6 +29,10 @@ func Exec(filename string, hasH bool, fileType string) error {
 		var fileRepoS ports.FileRepository
 		fileRepoS = csv.NewFileCSVRepo("./"+constants.SUCCESSPATHNAME, constants.PATHPROCESSED)
 		userSuccessRepo = userRepo.NewUserRepo(constants.HEADER, fileRepoS)
+	}
+	if _, err := os.Stat("./headerConfiguration"); err != nil {
+		fmt.Println("configure headerConfiguration file")
+		return fmt.Errorf("configure headerConfiguration file")
 	}
 	confHeader, err := config.LoadConfigHeader()
 	configHeader := userModel.ConfigurationHeader{

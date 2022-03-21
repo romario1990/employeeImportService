@@ -1,6 +1,7 @@
 package userUsecase
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -431,8 +432,16 @@ func Test_userService_SaveUsers(t *testing.T) {
 	validUsers := []userModel.ConfigurationHeaderExport{
 		{Name: "Jane Doe", Email: "doe@test.com", Salary: "$8.45", Identifier: "5", Phone: "", Mobile: ""},
 	}
+	valid := [][]string{
+		{"Name", "Email", "Salary", "Identifier", "Phone", "Mobile"},
+		{"Jane Doe", "doe@test.com", "$8.45", "5", "", ""},
+	}
 	invalidUsers := []userModel.ConfigurationHeaderExport{
 		{Name: "Jane Doe", Email: "", Salary: "$8.45", Identifier: "5", Phone: "", Mobile: ""},
+	}
+	invalid := [][]string{
+		{"Name", "Email", "Salary", "Identifier", "Phone", "Mobile"},
+		{"Jane Doe", "", "$8.45", "5", "", ""},
 	}
 	type fields struct {
 		useCases        *UserService
@@ -477,9 +486,29 @@ func Test_userService_SaveUsers(t *testing.T) {
 			if err := userService.SaveUsers(tt.args.users, tt.args.userValid); (err != nil) != tt.wantErr {
 				t.Errorf("SaveUsers() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			//tearDown()
+			fmt.Println("AQUII", tt.args.userValid)
+			if tt.args.userValid {
+				got, err := userService.userSuccessRepo.GetList()
+				if (err != nil) != tt.wantErr {
+					t.Errorf("SaveUsers() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
+				if !reflect.DeepEqual(got, valid) {
+					t.Errorf("SaveUsers() got = %v, want %v", got, valid)
+				}
+			} else {
+				got, err := userService.userErrorRepo.GetList()
+				if (err != nil) != tt.wantErr {
+					t.Errorf("SaveUsers() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
+				if !reflect.DeepEqual(got, invalid) {
+					t.Errorf("SaveUsers() got = %v, want %v", got, invalid)
+				}
+			}
 		})
 	}
+	tearDown()
 }
 
 func Test_validateFieldsAlreadyRegistered(t *testing.T) {
