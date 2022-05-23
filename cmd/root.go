@@ -42,7 +42,7 @@ func init() {
 		&cfgFile,
 		"config",
 		"",
-		"config file (default is ./.headerConfiguration)",
+		"config file (default is ./headerConfiguration)",
 	)
 }
 
